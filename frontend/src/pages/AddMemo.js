@@ -24,7 +24,7 @@ const AddMemo = ({ doHandleChange }) => {
         padding: 0,
         width: 550,
         margin: "0 auto",
-        marginTop: 30,
+        marginTop: 5,
     };
 
     const [date, setDate] = useState("");
@@ -35,11 +35,13 @@ const AddMemo = ({ doHandleChange }) => {
     const [memoRemark, setMemoRemark] = useState("");
     const [select, setSelect] = useState("");
     const [file, setFile] = useState();
+    const [isFilePicked, setIsFilePicked] = useState(false);
 
     const handleImageChange = (e) => {
         console.log(e.target.files[0]);
 
         setFile(e.target.files[0]);
+        setIsFilePicked(true);
     };
 
     const handleSubmit = (e) => {
@@ -101,7 +103,7 @@ const AddMemo = ({ doHandleChange }) => {
     return (
         <Container>
             <Paper style={paperStyle}>
-                <div className="formUpdate" style={{ paddingTop: "50px" }}>
+                <div className="formUpdate" style={{ paddingTop: "1px" }}>
                     <form
                         className={classes.root}
                         noValidate
@@ -189,8 +191,7 @@ const AddMemo = ({ doHandleChange }) => {
                         </div>
 
                         <div>
-                            <div style={{ paddingTop: "30px" }}>
-                                {/* 
+                            <div style={{ paddingTop: "0px" }}>
                                 <div>
                                     <input
                                         accept="image/*"
@@ -199,7 +200,7 @@ const AddMemo = ({ doHandleChange }) => {
                                         id="contained-button-file"
                                         single="true"
                                         type="file"
-                                        name="filename"
+                                        name="file"
                                     />
                                     <label htmlFor="contained-button-file">
                                         <Button
@@ -211,18 +212,15 @@ const AddMemo = ({ doHandleChange }) => {
                                             <input type="file" hidden />
                                         </Button>
                                     </label>
-                                </div> 
-                                */}
-
-                                <div class="form-group">
-                                    <input
-                                        type="file"
-                                        name="file"
-                                        id="pic"
-                                        onChange={handleImageChange}
-                                        class="form-control-file"
-                                    />
                                 </div>
+
+                                {isFilePicked ? (
+                                    <div>
+                                        <p>Filename: {file.name}</p>
+                                    </div>
+                                ) : (
+                                    <p>Select a file to show details</p>
+                                )}
                             </div>
 
                             <TextField
@@ -238,7 +236,13 @@ const AddMemo = ({ doHandleChange }) => {
                             </TextField>
                         </div>
 
-                        <div className="" style={{ paddingTop: "30px" }}>
+                        <div
+                            className=""
+                            style={{
+                                paddingTop: "30px",
+                                paddingBottom: "30px",
+                            }}
+                        >
                             <Button
                                 variant="contained"
                                 onClick={(e) => handleSubmit(e)}

@@ -3,9 +3,10 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
-const { ensureAuthenticated } = require("../config/auth");
+const jwt = require("jsonwebtoken");
+const auth = require("../config/auth");
 
-router.get("/loadUser", ensureAuthenticated, async (req, res) => {
+router.get("/loadUser", auth, async (req, res) => {
     const user = await User.findById(req.user._id).select(
         "-Hashed_Password -salt"
     );
@@ -67,11 +68,26 @@ router.post("/login", (req, res) => {
                 if (err) throw err; // OR { return done(err) }
 
                 if (isMatch) {
-                    // passwords match
-                    // return done(null, user); // null err, and user is true
-                    return res.status(200).json({
-                        msg: "User matched.",
+                    // generate token
+                    const token = jwt.sign(
+                        { _id: this._id },
+                        process.env.JWT_SECRET,
+                        { expiresIn: "1hr" }
+                    );
+                    const { username } = user; /* email, role */
+
+                    return res.header("x-auth-token", token).json({
+                        user: { username /* email, role */ },
+                        token,
+                        msg: "Successful Login",
                     });
+
+                    console.log("res.header: ", res.header);
+                    console.log("token: ", token);
+
+                    /* return res.status(200).json({
+                        msg: "User matched.",
+                    }); */
                 } else {
                     return res.status(401).json({
                         msg: "Password does not match",
@@ -80,7 +96,7 @@ router.post("/login", (req, res) => {
             });
         })
         .catch((err) => {
-            console.log(err);
+            console.log("Login Error: ", err);
         });
 
     /* 

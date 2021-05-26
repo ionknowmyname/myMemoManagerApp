@@ -12,7 +12,7 @@ const Dashboard = () => {
     };
 
     const paperStyle = {
-        width: 650,
+        width: 1200,
         height: "90vh",
         margin: "0 auto",
     }; /* , alignItems: "center" */

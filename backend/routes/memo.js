@@ -1,14 +1,14 @@
 // const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
-const { ensureAuthenticated } = require("../config/auth");
+const auth = require("../config/auth");
 
 const Memo = require("../models/Memo");
 const User = require("../models/User");
 const { upload } = require("../uploadMulter");
 
-router.get("/memo", ensureAuthenticated, async (req, res) => {
-    // ensureAuthenticated
+///////////////////// GET ALL MEMOS /////////////////////
+router.get("/memo", async (req, res) => {
     // console.log(req);
     try {
         const memo = await Memo.find();
@@ -19,9 +19,11 @@ router.get("/memo", ensureAuthenticated, async (req, res) => {
         res.status(400).json({ msg: e.message });
     }
 });
+/////////////////////////////////////////////////////
 
 // const uploads = upload.single("file");
 
+//////////////////////// POST NEW MEMO ///////////////////////
 router.post("/memo", upload.single("file"), (req, res) => {
     // uploads(req, res, (err) => {
 
@@ -65,8 +67,10 @@ router.post("/memo", upload.single("file"), (req, res) => {
         });
     // });
 });
+////////////////////////////////////////////////////////////////////////
 
-router.post("/queryMemo", ensureAuthenticated, async (req, res) => {
+//////////////////////// GET MEMO BY ID & UPDATE ////////////////////////
+router.get("/queryMemo", async (req, res) => {
     const { id } = req.body;
     console.log(id);
     const memo = await Memo.findById({ _id: id });
@@ -74,15 +78,15 @@ router.post("/queryMemo", ensureAuthenticated, async (req, res) => {
     res.status(200).json(memo);
 });
 
-router.post("/memoUpdate", ensureAuthenticated, (req, res) => {
+router.post("/memoUpdate", auth, (req, res) => {
     const { userId, title, from, to, dateofArrival } = req.body;
-    User.findOneAndUpdate(
+    Memo.findOneAndUpdate(
         userId,
         { title, from, to, dateofArrival },
-        (err, user) => {
-            if (err || !user) {
+        (err, memo) => {
+            if (err || !memo) {
                 return res.status(400).json({
-                    msg: "User does not exist",
+                    msg: "Memo does not exist",
                 });
             } else {
                 res.status(200).json({
@@ -92,5 +96,6 @@ router.post("/memoUpdate", ensureAuthenticated, (req, res) => {
         }
     );
 });
+////////////////////////////////////////////////////////////////////////
 
 module.exports = router;
