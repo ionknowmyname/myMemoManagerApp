@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState /* useEffect */ } from "react";
 import { Grid, Paper, Typography, Box, Tab, Tabs } from "@material-ui/core";
+// import axios from "axios";
 
 import AddMemo from "./AddMemo";
 import Memolist from "./Memolist";
@@ -37,6 +38,33 @@ const Dashboard = () => {
             </div>
         );
     }
+
+    ////////////////////////// FROM MEMOLIST ///////////////////////////
+    /* 
+    
+    const getData = async () => {
+        const endpoint = "http://localhost:8000/newMemo/memo";
+        const config = {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+        };
+
+        const response = await axios.get(endpoint, config); // , memo
+
+        console.log(response.data);
+        // console.log(response);
+        // setTableData(response.data);
+    };
+
+    useEffect(() => {
+        getData();
+
+        // setSatusStatus(response.data.select);
+    }, []); 
+    
+    */
+    ///////////////////////////////////////////////////////////////////
 
     return (
         <Grid container>

@@ -36,7 +36,13 @@ app.use(express.json());
 
 ////////////////// CORS middleware   //////////////////////////
 if (process.env.NODE_ENV === "development") {
-    app.use(cors({ origin: `${process.env.FRONT_URL}` })); // 'http://localhost:3000'
+    app.use(
+        cors(/* {
+            origin: `${process.env.FRONT_URL}`,
+            credentials: true, //access-control-allow-credentials:true
+            optionSuccessStatus: 200,
+        } */)
+    ); // 'http://localhost:3000'
 }
 //////////////////////////////////////////////////////////////
 

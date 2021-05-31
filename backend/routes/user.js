@@ -55,7 +55,7 @@ router.post("/login", (req, res) => {
 
     const { username, password } = req.body;
 
-    User.findOne({ username })
+    User.findOne({ username: username }) // in DB: in req.body
         .then((user) => {
             if (!user) {
                 return res.status(400).json({
@@ -63,26 +63,30 @@ router.post("/login", (req, res) => {
                 });
             }
 
-            bcrypt.compare(password, user.password, (err, isMatch) => {
+            bcrypt.compare(password, user.password, (err, user) => {
                 // password is what user enter, user.password is what's hashed in DB
                 if (err) throw err; // OR { return done(err) }
 
-                if (isMatch) {
+                if (user) {
                     // generate token
+                    const payload = {
+                        username: user.username,
+                        // setting user.username from DB to username variable
+                    };
+                    // const { username } = user; /* email, role */
                     const token = jwt.sign(
-                        { _id: this._id },
+                        payload, // { username }   // {_id: this._id}, this looks more correct
                         process.env.JWT_SECRET,
                         { expiresIn: "1hr" }
                     );
-                    const { username } = user; /* email, role */
 
-                    return res.header("x-auth-token", token).json({
+                    res.header("x-auth-token", token).json({
                         user: { username /* email, role */ },
-                        token,
+                        token: token,
                         msg: "Successful Login",
                     });
 
-                    console.log("res.header: ", res.header);
+                    // console.log("res.header: ", res.header);
                     console.log("token: ", token);
 
                     /* return res.status(200).json({

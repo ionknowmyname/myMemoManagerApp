@@ -29,9 +29,9 @@ const useStyles = makeStyles((theme) => ({
             width: "34ch",
         }, */
 
-        margin: 0,
+        marginTop: "40px",
         background: "#fff",
-        position: "relative",
+        position: "absolute",
         top: "50%",
         left: "50%",
         // marginRight: '-50%',
@@ -40,12 +40,15 @@ const useStyles = makeStyles((theme) => ({
         transform: `translate(-50%, -50%)`,
         // zIndex:
     },
+    form: {
+        marginTop: "20px",
+    },
 
     closeImg: {
         cursor: "pointer",
         float: "right",
-        margin: "20px 20px 20px 0",
-        width: "50px",
+        margin: "5px 5px 2px 0",
+        width: "30px",
     },
     heading: {
         clear: "both",
@@ -54,18 +57,12 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "center",
         justifyContent: "center",
         width: "95%",
-        height: "58px",
+        height: "50px",
         margin: "auto",
-        top: "100px",
+        top: "50px",
         background: "#F2F2F2",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
     },
-    /* tables: {
-        margin: "auto",
-        width: "95%",
-        borderSpacing: "0",
-        borderCollapse: "collapse",
-    }, */
 
     spaces: {
         width: "95%",
@@ -76,11 +73,11 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "space-between",
         alignItems: "center",
     },
-    actionBtn: {
+    /* actionBtn: {
         display: "inline-block",
         padding: "5px 20px ",
         margin: "5px 50px 5px 5px",
-    },
+    }, */
 }));
 
 const EditMemoModal = ({ show, onClose, dataFromDB }) => {
@@ -118,7 +115,7 @@ const EditMemoModal = ({ show, onClose, dataFromDB }) => {
     const classes = useStyles();
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        /* e.preventDefault();
 
         let formData = new FormData();
         formData.append("memoFrom", memoFrom);
@@ -151,7 +148,10 @@ const EditMemoModal = ({ show, onClose, dataFromDB }) => {
                     window.location.href = "/dashboard";
                 }
             })
-            .catch((err) => console.log(err));
+            .catch((err) => console.log(err)); */
+
+        console.log("dataFromDB: ", dataFromDB);
+        console.log("tableData: ", tableData);
     };
 
     if (!show) return null;
@@ -211,52 +211,54 @@ const EditMemoModal = ({ show, onClose, dataFromDB }) => {
 
                     <div className="responsive-container">
                         <form
-                            className={classes.root}
+                            className={classes.form}
                             noValidate
                             autoComplete="off"
                             onSubmit={handleSubmit}
                         >
                             <TextField
                                 disabled
-                                id="outlined-basic"
+                                id="outlined-basic1"
                                 label="From"
                                 name="memoFrom"
                                 className="formText"
                                 onChange={(e) => setMemoFrom(e.target.value)}
-                                value={memoFrom}
+                                // value={memoFrom}
                                 defaultValue={tableData.memoFrom}
                                 variant="filled"
                             />
+
                             <TextField
                                 disabled
-                                id="outlined-basic"
+                                id="outlined-basic2"
                                 name="memoTo"
                                 label="To"
                                 className="formText"
                                 onChange={(e) => setMemoTo(e.target.value)}
-                                value={memoTo}
+                                // value={memoTo}
                                 defaultValue={tableData.memoTo}
                                 variant="filled"
                             />
                             <TextField
-                                id="outlined-basic"
+                                disabled
+                                id="outlined-basic3"
                                 name="memoTitle"
                                 label="Title"
                                 className="formText"
                                 onChange={(e) => setMemoTitle(e.target.value)}
-                                value={memoTitle}
+                                //value={memoTitle}
                                 multiline
                                 rows={6}
                                 defaultValue={tableData.memoTitle}
                                 variant="filled"
                             />
                             <TextField
-                                id="outlined-basic"
+                                id="outlined-basic4"
                                 name="memoRemark"
                                 label="Remark"
                                 className="formText"
                                 onChange={(e) => setMemoRemark(e.target.value)}
-                                value={memoRemark}
+                                //value={memoRemark}
                                 multiline
                                 rows={6}
                                 defaultValue={tableData.memoRemark}
@@ -291,129 +293,11 @@ const EditMemoModal = ({ show, onClose, dataFromDB }) => {
                                     Submit
                                 </Button>
                             </div>
-
-                            {/* <tbody>
-                                <tr>
-                                    <td>M/No: </td>
-                                    <td></td>
-                                    <td>Title: </td>
-                                    <td colSpan="3">{}</td>
-                                </tr>
-                                <tr>
-                                    <td>From: </td>
-                                    <td></td>
-                                    <td>To: </td>
-                                    <td></td>
-                                    <td>Date: </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td className="double">Details: </td>
-                                    <td className="double" colSpan="5"></td>
-                                </tr>
-                                <tr>
-                                    <td>Actions: </td>
-                                    <td colSpan="5">
-                                        <div className={classes.actionBtn}>
-                                            <Button
-                                                variant="contained"
-                                                style={{
-                                                    backgroundColor: "#2E87A9",
-                                                    color: "#fff",
-                                                }}
-                                                onClick={(e) => {
-                                                    console.log(
-                                                        "dataFromDB: ",
-                                                        dataFromDB
-                                                    );
-                                                    if (localStorage.token) {
-                                                        // handleClick();
-                                                        localStorage.setItem(
-                                                            "modalValues",
-                                                            "treat"
-                                                        );
-                                                    }
-                                                }}
-                                            >
-                                                Treat
-                                            </Button>
-                                        </div>
-                                        <div className={classes.actionBtn}>
-                                            <Button
-                                                variant="contained"
-                                                style={{
-                                                    backgroundColor: "#2E87A9",
-                                                    color: "#fff",
-                                                }}
-                                            >
-                                                Re-assign
-                                            </Button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody> */}
                         </form>
                     </div>
                 </CardContent>
             </Card>
         </div>
-
-        /* 
-            
-            <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                className={classes.modal}
-                open={open}
-                onClose={() => {
-                    setOpen(false);
-                }}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
-                }}
-            >
-                <Fade in={open}>
-                    <div className={classes.paper}>
-                        <h2 id="transition-modal-title">Transition modal</h2>
-                        <p id="transition-modal-description">
-                            react-transition-group animates me.
-                        </p>
-                    </div>
-                </Fade>
-            </Modal> 
-
-            */
-
-        /* 
-            
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Modal heading
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <h4>Centered Modal</h4>
-                    <p>
-                        Cras mattis consectetur purus sit amet fermentum. Cras
-                        justo odio, dapibus ac facilisis in, egestas eget quam.
-                        Morbi leo risus, porta ac consectetur ac, vestibulum at
-                        eros.
-                    </p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
-                </Modal.Footer>
-            </Modal> 
-            
-            */
     );
 };
 

@@ -18,22 +18,43 @@ import AttachmentIcon from "@material-ui/icons/Attachment";
 
 import ViewDetailsModal from "./modals/ViewDetailsModal";
 import EditMemoModal from "./modals/EditMemoModal";
+import ShowAttachmentModal from "./modals/ShowAttachmentModal";
 
-const Memolist = () => {
+const Memolist = (props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [tableData, setTableData] = useState([]);
-    const [singleData, setSingleData] = useState({});
+    const [tableData, setTableData] = useState([]); // all data
+    const [singleData, setSingleData] = useState({}); // for view,edit,picture modals
+    const [singleDataFromDB, setSingleDataFromDB] = useState({}); // for edit data from DB
 
-    const [statusStatus, setStatusStatus] = useState();
+    const [statusStatus, setStatusStatus] = useState([]);
 
     const [viewModalShow, setViewModalShow] = useState(false);
     const [editModalShow, setEditModalShow] = useState(false);
+    const [pictureModalShow, setPictureModalShow] = useState(false);
     ///////////////////////////////////////////////////////
 
     const getData = async () => {
         const endpoint = "http://localhost:8000/newMemo/memo";
-        const response = await axios.get(endpoint); // , memo
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+
+        // if token, add to header
+        /* if (props.token) {
+            config.headers["x-auth-token"] = props.token;
+        } */
+
+        /* const config = {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"), // x-auth-token
+            },
+        }; */
+
+        const response = await axios.get(endpoint, config); // , memo
 
         console.log(response.data);
         // console.log(response);
@@ -46,7 +67,10 @@ const Memolist = () => {
             setSatusStatus("PENDING");
         } */
 
-        setStatusStatus(response.data.select);
+        //tableData.map((dataSelect) => console.log(dataSelect.select));
+
+        //setStatusStatus(response.data.select);
+        //console.log("statusStatus: ", statusStatus);
     };
 
     useEffect(() => {
@@ -76,6 +100,11 @@ const Memolist = () => {
     //#region
 
     const ViewModal = (id, index) => {
+        /* 
+            Method: select by id from the front and pass as 
+            props into the View modal; no need for backend 
+        */
+
         console.log("view modal id: ", id);
         //toggleModal();
 
@@ -83,7 +112,7 @@ const Memolist = () => {
         const index1 = tableData.indexOf(singleMemo);
         const selectedMemo = tableData[index1];
         console.log("selected memo: ", selectedMemo);
-        selectedMemo.index = index + 1;
+        selectedMemo.index = index + 1; // adds index to the selectedMemo object
 
         setSingleData(selectedMemo);
 
@@ -100,10 +129,39 @@ const Memolist = () => {
     //////////////// EDIT MODAL REGION ////////////////////////
     //#region
 
-    const EditModal = (id) => {
-        console.log("edit modal id: ", id);
-        //toggleModal();
+    const EditModal = async (id) => {
+        /* 
+            Method 1: select id from the front and post id to the backend, 
+            match id at backend and retrieve data and send to frontend,
+            set data to state, then pass as props to Edit modal
+            ______________________________________________________________
 
+            Method 2: select by id from the front and pass as 
+            props into the Edit modal, no need for backend 
+            ______________________________________________________________
+
+            Method 1 is harder, for practice, method 2 already working
+        */
+
+        console.log("edit modal id: ", id);
+        const endpoint = "http://localhost:8000/newMemo/queryMemo";
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+        };
+        const queryId = id;
+        await axios
+            .post(endpoint, queryId, config)
+            .then((res) => {
+                setSingleDataFromDB(res.data);
+
+                console.log("singleDataFromDB: ", singleDataFromDB);
+            })
+            .catch((err) => console.log(err));
+
+        //////////////////   Method 2 START /////////////////////////
         /* const singleMemo = tableData.find((data) => data._id === id);
         const index1 = tableData.indexOf(singleMemo);
         const selectedMemo = tableData[index1];
@@ -111,11 +169,32 @@ const Memolist = () => {
         setSingleData(selectedMemo);
         */
 
+        /*   WORKING PART
         tableData.map((data) => data._id === id && setSingleData(data));
 
         setEditModalShow((prev) => !prev);
         console.log("clicked the pencil");
         console.log("set modal with prev for edit: ", editModalShow);
+
+        */
+        ////////////////////// METHOD 2 END //////////////////////////////
+    };
+
+    //#endregion
+    ///////////////////////////////////////////////////////////
+
+    //////////////// VIEW PICTURE MODAL REGION ////////////////
+    //#region
+
+    const PictureModal = (id) => {
+        // alert(tdata._id);
+        console.log("picture modal id: ", id);
+
+        tableData.map((data) => data._id === id && setSingleData(data));
+
+        setPictureModalShow((prev) => !prev);
+        console.log("clicked the attachment");
+        console.log("set modal with prev for picture: ", pictureModalShow);
     };
 
     //#endregion
@@ -124,7 +203,7 @@ const Memolist = () => {
     /////////////////// FROM TEMPLATE ///////////////////////////
     //#region
     const columns = [
-        { id: "M/No", label: "M/No", minWidth: 170 },
+        { id: "M/No", label: "M/No", minWidth: 50 },
         { id: "title", label: "Title", minWidth: 100 },
         {
             id: "from",
@@ -263,7 +342,7 @@ const Memolist = () => {
                                     >
                                         <Button
                                             onClick={() => {
-                                                alert(tdata._id);
+                                                PictureModal(tdata._id);
                                             }}
                                         >
                                             <span className="iconTag">
@@ -297,7 +376,13 @@ const Memolist = () => {
             <EditMemoModal
                 show={editModalShow}
                 onClose={() => setEditModalShow((prev) => !prev)}
-                dataFromDB={singleData}
+                dataFromDB={singleDataFromDB}
+            />
+
+            <ShowAttachmentModal
+                show={pictureModalShow}
+                onClose={() => setPictureModalShow((prev) => !prev)}
+                dataFromDB={singleDataFromDB}
             />
         </Paper>
     );

@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 
 module.exports = function (req, res, next) {
     const token = req.header("x-auth-token");
+
+    // var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (!token)
         return res.status(401).json({ msg: "Access denied. Unauthorized" });
 
@@ -10,6 +12,13 @@ module.exports = function (req, res, next) {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
         next();
+
+        /* jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+            if (err) return res.sendStatus(403);
+
+            req.user = user;
+            next();
+        }); */
     } catch (ex) {
         res.status(400).json({ msg: "Invalid token." });
     }

@@ -70,15 +70,16 @@ router.post("/memo", upload.single("file"), (req, res) => {
 ////////////////////////////////////////////////////////////////////////
 
 //////////////////////// GET MEMO BY ID & UPDATE ////////////////////////
-router.get("/queryMemo", async (req, res) => {
+router.post("/queryMemo", async (req, res) => {
     const { id } = req.body;
-    console.log(id);
-    const memo = await Memo.findById({ _id: id });
+    console.log("id: ", id);
+    // console.log("req: ", req);
+    const memo = await Memo.findById({ _id: id }); // req.params.id
     // console.log(memo);
     res.status(200).json(memo);
 });
 
-router.post("/memoUpdate", auth, (req, res) => {
+router.put("/memoUpdate", (req, res) => {
     const { userId, title, from, to, dateofArrival } = req.body;
     Memo.findOneAndUpdate(
         userId,
@@ -96,6 +97,25 @@ router.post("/memoUpdate", auth, (req, res) => {
         }
     );
 });
+
+/* router.post("/memoUpdate", auth, (req, res) => {
+    const { userId, title, from, to, dateofArrival } = req.body;
+    Memo.findOneAndUpdate(
+        userId,
+        { title, from, to, dateofArrival },
+        (err, memo) => {
+            if (err || !memo) {
+                return res.status(400).json({
+                    msg: "Memo does not exist",
+                });
+            } else {
+                res.status(200).json({
+                    msg: "Memo sucessfully updated",
+                });
+            }
+        }
+    );
+}); */
 ////////////////////////////////////////////////////////////////////////
 
 module.exports = router;

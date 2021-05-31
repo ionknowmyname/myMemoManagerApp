@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Grid, Paper, TextField, Button, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
-const Login = () => {
+const Login = (props) => {
     const useStyles = makeStyles((theme) => ({
         root: {
             "& > *": {
@@ -28,6 +28,8 @@ const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    const history = useHistory();
+
     const checkUser = (e) => {
         e.preventDefault();
 
@@ -42,11 +44,16 @@ const Login = () => {
 
         const config = { headers: { "Content-type": "application/json" } };
         axios
-            .post("http://localhost:8000/users/login", user, config)
+            .post("http://localhost:8000/users/login", user /* , config */)
             .then((res) => {
-                console.log("for response posted to backend ", res); // consoles in the node terminal
+                console.log("for response posted to backend: ", res); // consoles in the node terminal
                 if (res.status === 200) {
-                    window.location.href = "/dashboard";
+                    localStorage.setItem("token", res.data.token);
+                    // window.location.href = "/dashboard";
+
+                    history.push("/dashboard"); // import useHistory?
+
+                    // this.props.history.push
                 } else {
                     alert("Wrong Username/Password");
 
