@@ -68,3 +68,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+############################################################
+
+# memolist.js statusStatus mapping for pending and urgent
+
+# passing of token for authentication
+
+# post id to back and get data from back with post/ or maybe get; editMemoModal amd memoList // working

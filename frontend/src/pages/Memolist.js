@@ -39,6 +39,7 @@ const Memolist = (props) => {
 
         const config = {
             headers: {
+                // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 "Content-Type": "application/json",
             },
         };
@@ -129,7 +130,7 @@ const Memolist = (props) => {
     //////////////// EDIT MODAL REGION ////////////////////////
     //#region
 
-    const EditModal = async (id) => {
+    const EditModal = (id) => {
         /* 
             Method 1: select id from the front and post id to the backend, 
             match id at backend and retrieve data and send to frontend,
@@ -146,20 +147,27 @@ const Memolist = (props) => {
         console.log("edit modal id: ", id);
         const endpoint = "http://localhost:8000/newMemo/queryMemo";
         const config = {
+            // mode: "no-cors",
             headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "*",
             },
         };
         const queryId = id;
-        await axios
-            .post(endpoint, queryId, config)
+        axios
+            .post(endpoint, { _id: queryId }, config)
             .then((res) => {
+                console.log(res);
                 setSingleDataFromDB(res.data);
 
                 console.log("singleDataFromDB: ", singleDataFromDB);
+                setEditModalShow((prev) => !prev);
+                console.log("clicked the pencil");
             })
             .catch((err) => console.log(err));
+
+        // await the memo
 
         //////////////////   Method 2 START /////////////////////////
         /* const singleMemo = tableData.find((data) => data._id === id);
@@ -382,7 +390,7 @@ const Memolist = (props) => {
             <ShowAttachmentModal
                 show={pictureModalShow}
                 onClose={() => setPictureModalShow((prev) => !prev)}
-                dataFromDB={singleDataFromDB}
+                dataFromDB={singleData}
             />
         </Paper>
     );

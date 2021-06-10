@@ -48,6 +48,7 @@ const Login = (props) => {
             .then((res) => {
                 console.log("for response posted to backend: ", res); // consoles in the node terminal
                 if (res.status === 200) {
+                    // localStorage.setItem("token", 'Bearer ' + res.data.token);
                     localStorage.setItem("token", res.data.token);
                     // window.location.href = "/dashboard";
 

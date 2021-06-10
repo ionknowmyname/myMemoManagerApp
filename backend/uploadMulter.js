@@ -8,11 +8,14 @@ const storage = multer.diskStorage({
         cb(null, "./uploads/"); // uploads folder
     },
     filename: (req, file, cb) => {
-        /* const ext = path.extname(file.originalname);
-        const id = `${Date.now()}-${file.originalname}`; // uuid();
+        const ext = path.extname(file.originalname);
+        /* const id = `${Date.now()}-${file.originalname}`; // uuid();
         cb(null, `${id}${ext}`); */
 
-        cb(null, Date.now() + "_" + file.originalname);
+        cb(null, Date.now() + "_" + ext); // + "_" + file.originalname
+
+        // removed file.originalname coz some filenames have spaces so its adding %20 when requesting path from the front
+        // can use uuid() instead
     },
 });
 

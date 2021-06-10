@@ -71,12 +71,16 @@ router.post("/memo", upload.single("file"), (req, res) => {
 
 //////////////////////// GET MEMO BY ID & UPDATE ////////////////////////
 router.post("/queryMemo", async (req, res) => {
-    const { id } = req.body;
-    console.log("id: ", id);
-    // console.log("req: ", req);
-    const memo = await Memo.findById({ _id: id }); // req.params.id
-    // console.log(memo);
-    res.status(200).json(memo);
+    try {
+        const { _id } = req.body;
+        console.log("id: ", _id);
+        // console.log("req: ", req);
+        const memo = await Memo.findById({ _id: _id }); // req.params.id
+        console.log("selected memo to pass front: ", memo);
+        res.status(200).json(memo);
+    } catch (e) {
+        res.status(400).json({ msg: e.message });
+    }
 });
 
 router.put("/memoUpdate", (req, res) => {

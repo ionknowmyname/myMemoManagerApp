@@ -29,10 +29,7 @@ mongoose
 
 const app = express();
 
-//////////// Bodyparser middleware //////////////
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-/////////////////////////////////////////////////
+app.use(express.static("uploads"));
 
 ////////////////// CORS middleware   //////////////////////////
 if (process.env.NODE_ENV === "development") {
@@ -45,6 +42,23 @@ if (process.env.NODE_ENV === "development") {
     ); // 'http://localhost:3000'
 }
 //////////////////////////////////////////////////////////////
+
+////////////////// middleware   //////////////////////////
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*"); // http://localhost:3000
+    // update to match the domain you will make the request from
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    next();
+});
+////////////////////////////////////////////////////////////////
+
+//////////// Bodyparser middleware //////////////
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+/////////////////////////////////////////////////
 
 //////// EXPRESS-SESSION middleware ////////////
 app.use(
