@@ -10,6 +10,7 @@ const memoSchema = new mongoose.Schema(
         memoRemark: { type: String },
         select: { type: String },
         path: { type: String },
+        isResolved: { type: Boolean, default: false },
     },
     { timestamps: true }
 );

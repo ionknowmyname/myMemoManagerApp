@@ -15,6 +15,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import CloseIcon from "@material-ui/icons/Close";
 import PrintIcon from "@material-ui/icons/Print";
 
+import axios from "axios";
+
 const useStyles = makeStyles({
     root: {
         margin: 0,
@@ -25,7 +27,7 @@ const useStyles = makeStyles({
         // marginRight: '-50%',
         width: "70%",
         height: "80vh",
-        transform: `translate(-50%, -50%)`,
+        transform: `translate(-50%, -38%)` /* left, up */,
     },
     closeImg: {
         cursor: "pointer",
@@ -69,23 +71,7 @@ const useStyles = makeStyles({
     },
 });
 
-const ViewDetailsModal = ({ show, onClose, dataFromDB }) => {
-    //const [open, setOpen] = useState(false);
-    const [tableData, setTableData] = useState({
-        memoTitle: "",
-        memoFrom: "",
-        memoTo: "",
-        loggedDate: "",
-        memoRemark: "",
-        select: "",
-        index: "",
-    });
-
-    useEffect(() => {
-        setTableData(dataFromDB);
-    }, [dataFromDB]);
-
-    /* 
+/* 
     
     const useStyles = makeStyles((theme) => ({
         modal: {
@@ -101,7 +87,62 @@ const ViewDetailsModal = ({ show, onClose, dataFromDB }) => {
         },
     })); 
     
-    */
+*/
+
+const ViewDetailsModal = ({ show, onClose, dataFromDB }) => {
+    //const [open, setOpen] = useState(false);
+    const [tableData, setTableData] = useState({
+        _id: "",
+        memoTitle: "",
+        memoFrom: "",
+        memoTo: "",
+        loggedDate: "",
+        memoRemark: "",
+        select: "",
+        index: "",
+    });
+
+    useEffect(() => {
+        setTableData(dataFromDB);
+    }, [dataFromDB]);
+
+    const resolvedClick = () => {
+        window.confirm("Are you sure you want to resolve this memo?");
+        // confirm method returns true if user clicks OK
+
+        // use window. coz confirm is a global method & is disabled by eslint
+        if (window.confirm) {
+            console.log("true");
+            onClose();
+
+            const config = {
+                headers: {
+                    "Content-type": "application/json",
+                },
+            };
+
+            const toResolve = {
+                ID: tableData._id,
+                isResolved: true,
+            };
+
+            axios.put(
+                "http://localhost:8000/newMemo/resolvedMemo",
+                toResolve,
+                config
+            );
+        }
+    };
+
+    const reassignClick = () => {
+        console.log("dataFromDB: ", dataFromDB);
+        console.log("tableData: ", tableData);
+
+        if (localStorage.token) {
+            // handleClick();
+            localStorage.setItem("modalValues", "treat");
+        }
+    };
 
     const classes = useStyles();
 
@@ -220,26 +261,9 @@ const ViewDetailsModal = ({ show, onClose, dataFromDB }) => {
                                                     backgroundColor: "#2E87A9",
                                                     color: "#fff",
                                                 }}
-                                                onClick={(e) => {
-                                                    console.log(
-                                                        "dataFromDB: ",
-                                                        dataFromDB
-                                                    );
-                                                    console.log(
-                                                        "tableData: ",
-                                                        tableData
-                                                    );
-
-                                                    if (localStorage.token) {
-                                                        // handleClick();
-                                                        localStorage.setItem(
-                                                            "modalValues",
-                                                            "treat"
-                                                        );
-                                                    }
-                                                }}
+                                                onClick={resolvedClick}
                                             >
-                                                Treat
+                                                Resolve
                                             </Button>
                                         </div>
                                         <div className={classes.actionBtn}>
@@ -249,6 +273,7 @@ const ViewDetailsModal = ({ show, onClose, dataFromDB }) => {
                                                     backgroundColor: "#2E87A9",
                                                     color: "#fff",
                                                 }}
+                                                onClick={reassignClick}
                                             >
                                                 Re-assign
                                             </Button>
@@ -261,64 +286,6 @@ const ViewDetailsModal = ({ show, onClose, dataFromDB }) => {
                 </CardContent>
             </Card>
         </div>
-        // </Modal>
-
-        /* 
-            
-            <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                className={classes.modal}
-                open={open}
-                onClose={() => {
-                    setOpen(false);
-                }}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
-                }}
-            >
-                <Fade in={open}>
-                    <div className={classes.paper}>
-                        <h2 id="transition-modal-title">Transition modal</h2>
-                        <p id="transition-modal-description">
-                            react-transition-group animates me.
-                        </p>
-                    </div>
-                </Fade>
-            </Modal> 
-
-        */
-
-        /* 
-            
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Modal heading
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <h4>Centered Modal</h4>
-                    <p>
-                        Cras mattis consectetur purus sit amet fermentum. Cras
-                        justo odio, dapibus ac facilisis in, egestas eget quam.
-                        Morbi leo risus, porta ac consectetur ac, vestibulum at
-                        eros.
-                    </p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
-                </Modal.Footer>
-            </Modal> 
-            
-        */
     );
 };
 

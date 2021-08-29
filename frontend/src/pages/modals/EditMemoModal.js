@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import moment from "moment";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
         // marginRight: '-50%',
         width: "70%",
         height: "80vh",
-        transform: `translate(-50%, -50%)`,
+        transform: `translate(-50%, -42%)` /* left, up */,
         // zIndex:
     },
     form: {
@@ -66,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 
     spaces: {
         width: "95%",
-        height: "75px",
+        height: "68px",
         margin: "auto",
         border: "1px solid red",
         display: "flex",
@@ -80,21 +81,7 @@ const useStyles = makeStyles((theme) => ({
     }, */
 }));
 
-const EditMemoModal = ({ show, onClose, dataFromDB }) => {
-    //const [open, setOpen] = useState(false);
-    const [tableData, setTableData] = useState({});
-
-    const [memoFrom, setMemoFrom] = useState("");
-    const [memoTo, setMemoTo] = useState("");
-    const [memoTitle, setMemoTitle] = useState("");
-    const [memoRemark, setMemoRemark] = useState("");
-    const [select, setSelect] = useState("");
-
-    useEffect(() => {
-        setTableData(dataFromDB);
-    }, [dataFromDB]);
-
-    /* 
+/* 
     
     const useStyles = makeStyles((theme) => ({
         modal: {
@@ -110,23 +97,48 @@ const EditMemoModal = ({ show, onClose, dataFromDB }) => {
         },
     })); 
     
-    */
+*/
+
+const EditMemoModal = ({ show, onClose, dataFromDB }) => {
+    //const [open, setOpen] = useState(false);
+    const [tableData, setTableData] = useState({});
+
+    const [memoFrom, setMemoFrom] = useState("");
+    const [memoTo, setMemoTo] = useState("");
+    const [memoTitle, setMemoTitle] = useState("");
+    const [memoRemark, setMemoRemark] = useState("");
+    const [select, setSelect] = useState("");
+
+    useEffect(() => {
+        setTableData(dataFromDB);
+    }, [dataFromDB]);
 
     const classes = useStyles();
+    const history = useHistory();
 
     const handleSubmit = (e) => {
-        /* e.preventDefault();
+        e.preventDefault();
 
+        /* 
         let formData = new FormData();
+        formData.append("ID", tableData._id);
         formData.append("memoFrom", memoFrom);
         formData.append("memoTo", memoTo);
         formData.append("memoTitle", memoTitle);
         formData.append("memoRemark", memoRemark);
-
         formData.append("select", select);
 
-        // console.log("For Registered ", registered);
-        console.log("For formData ", formData);
+        console.log("For formData ", formData); 
+        */
+
+        const toUpdate = {
+            ID: tableData._id,
+            memoFrom: memoFrom,
+            memoTo: memoTo,
+            memoTitle: memoTitle,
+            memoRemark: memoRemark,
+            select: select,
+        };
 
         const config = {
             headers: {
@@ -134,9 +146,9 @@ const EditMemoModal = ({ show, onClose, dataFromDB }) => {
             },
         };
         axios
-            .post("http://localhost:8000/newMemo/memo", formData, config) // delete config so browser can add correct header
+            .post("http://localhost:8000/newMemo/memoUpdate", toUpdate, config) // formData
             .then((res) => {
-                console.log("for response posted to backend ", res); // consoles in the node terminal
+                console.log("for response updated to backend ", res); // consoles in the node terminal
 
                 // clearing out form
                 setMemoFrom("");
@@ -145,10 +157,12 @@ const EditMemoModal = ({ show, onClose, dataFromDB }) => {
                 setMemoRemark("");
 
                 if (res.status === 200) {
-                    window.location.href = "/dashboard";
+                    // window.location.href = "/dashboard";
+                    onClose();
+                    history.push("/dashboard");
                 }
             })
-            .catch((err) => console.log(err)); */
+            .catch((err) => console.log(err));
 
         console.log("dataFromDB: ", dataFromDB);
         console.log("tableData: ", tableData);

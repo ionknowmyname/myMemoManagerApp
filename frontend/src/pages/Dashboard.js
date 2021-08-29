@@ -1,11 +1,15 @@
-import { useState /* useEffect */ } from "react";
+import { useState, useContext /* useEffect */ } from "react";
 import { Grid, Paper, Typography, Box, Tab, Tabs } from "@material-ui/core";
 // import axios from "axios";
 
 import AddMemo from "./AddMemo";
 import Memolist from "./Memolist";
+import ResolvedMemolist from "./ResolvedMemolist";
+import { UserContext } from "../UserContext";
 
 const Dashboard = () => {
+    const user = useContext(UserContext);
+
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {
@@ -80,7 +84,7 @@ const Dashboard = () => {
                         <Tab label="Memo List" />
                         <Tab label="Add New Memo" />
                         <Tab label="Item 3" />
-                        <Tab label="Item 4" />
+                        <Tab label="Resolved Memo" />
                     </Tabs>
 
                     <TabPanel value={value} index={0}>
@@ -93,7 +97,7 @@ const Dashboard = () => {
                         Item 3
                     </TabPanel>
                     <TabPanel value={value} index={3}>
-                        Item 4
+                        <ResolvedMemolist />
                     </TabPanel>
                 </Paper>
             </Grid>

@@ -20,6 +20,20 @@ import ViewDetailsModal from "./modals/ViewDetailsModal";
 import EditMemoModal from "./modals/EditMemoModal";
 import ShowAttachmentModal from "./modals/ShowAttachmentModal";
 
+const useStyles = makeStyles({
+    root: {
+        width: "100%",
+        marginTop: "40px",
+    },
+    container: {
+        maxHeight: 640,
+    },
+    tblhead: {
+        // make it bold
+        fontWeight: "700", // bold
+    },
+});
+
 const Memolist = (props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -142,21 +156,21 @@ const Memolist = (props) => {
             ______________________________________________________________
 
             Method 1 is harder, for practice, method 2 already working
+            Method 1 also working 
         */
 
         console.log("edit modal id: ", id);
         const endpoint = "http://localhost:8000/newMemo/queryMemo";
         const config = {
-            // mode: "no-cors",
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "*",
             },
         };
-        const queryId = id;
+        //const queryId = id;
         axios
-            .post(endpoint, { _id: queryId }, config)
+            .post(endpoint, { ID: id }, config)
             .then((res) => {
                 console.log(res);
                 setSingleDataFromDB(res.data);
@@ -166,8 +180,6 @@ const Memolist = (props) => {
                 console.log("clicked the pencil");
             })
             .catch((err) => console.log(err));
-
-        // await the memo
 
         //////////////////   Method 2 START /////////////////////////
         /* const singleMemo = tableData.find((data) => data._id === id);
@@ -221,25 +233,16 @@ const Memolist = (props) => {
             //format: (value) => value.toLocaleString("en-US"),
         },
         { id: "to", label: "To", minWidth: 100 },
-        { id: "date", label: "Date" },
-        { id: "loggedDate", label: "Logged date" },
+        { id: "loggedDate", label: "Logged Date" },
+        { id: "updateDate", label: "Updated Date" },
         { id: "status", label: "Status", maxWidth: 30 },
         {
             id: "action",
-            label: "Action",
+            label: "Actions",
             maxWidth: 50,
             align: "left",
         },
     ];
-
-    const useStyles = makeStyles({
-        root: {
-            width: "100%",
-        },
-        container: {
-            maxHeight: 640,
-        },
-    });
 
     const classes = useStyles();
 
@@ -263,6 +266,7 @@ const Memolist = (props) => {
                             {columns.map((column) => (
                                 <TableCell
                                     key={column.id}
+                                    className={classes.tblhead}
                                     // align={column.align}
                                     // style={{ minWidth: column.minWidth }}
                                 >
@@ -283,7 +287,12 @@ const Memolist = (props) => {
                                         "DD MMM, YYYY"
                                     )}
                                 </TableCell>
-                                <TableCell>{tdata.loggedDate}</TableCell>
+                                <TableCell>
+                                    {moment(tdata.updatedAt).format(
+                                        "DD MMM, YYYY"
+                                    )}
+                                </TableCell>
+                                {/* loggedDate */}
                                 <TableCell>
                                     {statusStatus === "URGENT" ? (
                                         <Button

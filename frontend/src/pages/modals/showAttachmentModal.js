@@ -17,8 +17,8 @@ const useStyles = makeStyles({
         left: "50%",
         // marginRight: '-50%',
         width: "70%",
-        height: "70vh",
-        transform: `translate(-50%, -50%)` /* left, up */,
+        height: "80vh",
+        transform: `translate(-50%, -38%)` /* left, up */,
     },
     closeImg: {
         cursor: "pointer",

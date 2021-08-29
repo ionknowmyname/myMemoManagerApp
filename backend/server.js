@@ -10,6 +10,17 @@ const user = require("./routes/user");
 const memo = require("./routes/memo");
 
 dotenv.config();
+
+const elastic = require("elasticsearch");
+const elasticClient = elastic.Client({
+    host: "localhost:9200",
+});
+
+/* var elasticsearch = require('elasticsearch');
+ var client = new elasticsearch.Client({
+   hosts: [ 'https://username:password@host:port']
+}); */
+
 ////////////////////  MongoDB Connection ////////////////////////
 mongoose
     .connect(process.env.DATABASE, {

@@ -2,30 +2,59 @@ import { useState } from "react";
 import {
     TextField,
     Button,
-    Container,
-    Paper,
+    Card,
+    CardContent,
     MenuItem,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 
-const AddMemo = ({ doHandleChange }) => {
-    const useStyles = makeStyles((theme) => ({
-        root: {
-            "& > *": {
-                margin: theme.spacing(1),
-                width: "40ch",
-            },
-        },
-    }));
+const useStyles = makeStyles((theme) => ({
+    root: {
+        /* "& > *": {
+            margin: theme.spacing(1),
+            width: "40ch",
+        }, */
+        marginTop: "10px",
+        background: "#fff",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        width: "70%",
+        height: "82vh",
+        transform: `translate(-50%, -50%)`,
+    },
+    form: {
+        // marginTop: "20px",
+    },
+    submit: {
+        paddingTop: "20px",
+        paddingBottom: "20px",
+    },
 
+    heading: {
+        clear: "both",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "95%",
+        height: "50px",
+        margin: "auto",
+        top: "50px",
+        background: "#F2F2F2",
+        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+    },
+}));
+
+/* const paperStyle = {
+    padding: 0,
+    width: 550,
+    margin: "0 auto",
+    marginTop: 5,
+}; */
+
+const AddMemo = ({ doHandleChange }) => {
     const classes = useStyles();
-    const paperStyle = {
-        padding: 0,
-        width: 550,
-        margin: "0 auto",
-        marginTop: 5,
-    };
 
     const [date, setDate] = useState("");
     const [loggedDate, setLoggedDate] = useState("");
@@ -57,17 +86,21 @@ const AddMemo = ({ doHandleChange }) => {
         formData.append("loggedDate", loggedDate);
         formData.append("file", file);
 
+        /* Also works instead of FormDat
+
         const registered = {
-            date,
-            loggedDate,
-            memoFrom,
-            memoTo,
-            memoTitle,
-            memoRemark,
-            select,
-            file,
+            date: date,
+            loggedDate: loggedDate,
+            memoFrom: memoFrom,
+            memoTo: memoTo,
+            memoTitle: memoTitle,
+            memoRemark: memoRemark,
+            select: select,
+            file: file,
         };
-        console.log("For Registered ", registered);
+        console.log("For Registered ", registered); 
+        
+        */
         console.log("For formData ", formData);
 
         const config = {
@@ -101,98 +134,119 @@ const AddMemo = ({ doHandleChange }) => {
     };
 
     return (
-        <Container>
-            <Paper style={paperStyle}>
-                <div className="formUpdate" style={{ paddingTop: "1px" }}>
-                    <form
-                        className={classes.root}
-                        noValidate
-                        autoComplete="off"
-                        onSubmit={handleSubmit}
-                    >
-                        <div style={{ paddingTop: "20px" }}>
-                            <TextField
-                                id="date"
-                                label="Date"
-                                variant="filled"
-                                className="formDate"
-                                type="date"
-                                defaultValue="2017-05-24"
-                                name="date"
-                                value={date}
-                                onChange={(e) => setDate(e.target.value)}
-                                InputLabelProps={{ shrink: true }}
-                            />
-                        </div>
-                        <div style={{ paddingTop: "20px" }}>
-                            <TextField
-                                id="date"
-                                label="Logged Date"
-                                variant="filled"
-                                className="formDate"
-                                type="date"
-                                defaultValue="2017-05-24"
-                                name="loggedDate"
-                                value={loggedDate}
-                                onChange={(e) => setLoggedDate(e.target.value)}
-                                InputLabelProps={{
-                                    shrink: true,
+        <div className={classes.default}>
+            <Card className={classes.root}>
+                <CardContent>
+                    {/* <div className="formUpdate" style={{ paddingTop: "1px" }}> */}
+                    <div className={classes.heading}>ADD NEW MEMO</div>
+
+                    <div className="responsive-container">
+                        <form
+                            className={classes.form}
+                            noValidate
+                            autoComplete="off"
+                            onSubmit={handleSubmit}
+                        >
+                            <div
+                                style={{
+                                    paddingTop: "40px",
+                                    paddingLeft: "20px",
                                 }}
-                            />
-                        </div>
-                        <div style={{ paddingTop: "20px" }}>
-                            <TextField
-                                id="outlined-basic"
-                                label="From"
-                                name="memoFrom"
-                                className="formText"
-                                onChange={(e) => setMemoFrom(e.target.value)}
-                                value={memoFrom}
-                                variant="filled"
-                            />
-                        </div>
-                        <div style={{ paddingTop: "20px" }}>
-                            <TextField
-                                id="outlined-basic"
-                                name="memoTo"
-                                label="To"
-                                className="formText"
-                                onChange={(e) => setMemoTo(e.target.value)}
-                                value={memoTo}
-                                variant="filled"
-                            />
-                        </div>
-                        <div style={{ paddingTop: "20px" }}>
-                            <TextField
-                                id="outlined-basic"
-                                name="memoTitle"
-                                label="Title"
-                                className="formText"
-                                onChange={(e) => setMemoTitle(e.target.value)}
-                                value={memoTitle}
-                                multiline
-                                rows={6}
-                                variant="filled"
-                            />
-                        </div>
+                            >
+                                <TextField
+                                    id="date"
+                                    label="Date"
+                                    variant="filled"
+                                    type="date"
+                                    defaultValue="2017-05-24"
+                                    style={{ paddingRight: "10px" }}
+                                    name="date"
+                                    value={date}
+                                    onChange={(e) => setDate(e.target.value)}
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                                <TextField
+                                    id="date"
+                                    label="Logged Date"
+                                    variant="filled"
+                                    style={{ paddingRight: "10px" }}
+                                    type="date"
+                                    defaultValue="2017-05-24"
+                                    name="loggedDate"
+                                    value={loggedDate}
+                                    onChange={(e) =>
+                                        setLoggedDate(e.target.value)
+                                    }
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
+                                <TextField
+                                    id="outlined-basic"
+                                    label="From"
+                                    name="memoFrom"
+                                    style={{ paddingRight: "10px" }}
+                                    onChange={(e) =>
+                                        setMemoFrom(e.target.value)
+                                    }
+                                    value={memoFrom}
+                                    variant="filled"
+                                />
+                                <TextField
+                                    id="outlined-basic"
+                                    name="memoTo"
+                                    label="To"
+                                    className="formText"
+                                    onChange={(e) => setMemoTo(e.target.value)}
+                                    value={memoTo}
+                                    variant="filled"
+                                />
+                            </div>
 
-                        <div style={{ paddingTop: "20px" }}>
-                            <TextField
-                                id="outlined-basic"
-                                name="memoRemark"
-                                label="Remark"
-                                className="formText"
-                                onChange={(e) => setMemoRemark(e.target.value)}
-                                value={memoRemark}
-                                multiline
-                                rows={6}
-                                variant="filled"
-                            />
-                        </div>
-
-                        <div>
-                            <div style={{ paddingTop: "0px" }}>
-                                <div>
+                            <div
+                                style={{
+                                    paddingTop: "20px",
+                                    paddingLeft: "20px",
+                                }}
+                            >
+                                <TextField
+                                    id="outlined-basic"
+                                    name="memoTitle"
+                                    label="Title"
+                                    style={{ paddingRight: "10px" }}
+                                    onChange={(e) =>
+                                        setMemoTitle(e.target.value)
+                                    }
+                                    value={memoTitle}
+                                    multiline
+                                    rows={6}
+                                    variant="filled"
+                                />
+                                <TextField
+                                    id="outlined-basic"
+                                    name="memoRemark"
+                                    label="Remark"
+                                    style={{ paddingRight: "10px" }}
+                                    onChange={(e) =>
+                                        setMemoRemark(e.target.value)
+                                    }
+                                    value={memoRemark}
+                                    multiline
+                                    rows={6}
+                                    variant="filled"
+                                />
+                                <TextField
+                                    id="standard-select-currency"
+                                    select
+                                    label="Select Priority"
+                                    value={select}
+                                    onChange={(e) => setSelect(e.target.value)}
+                                    helperText="Please select memo status"
+                                >
+                                    <MenuItem value="PENDING">PENDING</MenuItem>
+                                    <MenuItem value="URGENT">URGENT</MenuItem>
+                                </TextField>
+                                <div style={{ paddingTop: "20px" }}>
                                     <input
                                         accept="image/*"
                                         style={{ display: "none" }}
@@ -212,48 +266,28 @@ const AddMemo = ({ doHandleChange }) => {
                                             <input type="file" hidden />
                                         </Button>
                                     </label>
-                                </div>
-
-                                {isFilePicked ? (
-                                    <div>
+                                    {isFilePicked ? (
+                                        // <div>
                                         <p>Filename: {file.name}</p>
-                                    </div>
-                                ) : (
-                                    <p>Select a file to show details</p>
-                                )}
+                                    ) : (
+                                        // </div>
+                                        <p>Select a file to show details</p>
+                                    )}
+                                    <Button
+                                        variant="contained"
+                                        onClick={(e) => handleSubmit(e)}
+                                    >
+                                        Submit
+                                    </Button>
+                                </div>
                             </div>
 
-                            <TextField
-                                id="standard-select-currency"
-                                select
-                                label="Select"
-                                value={select}
-                                onChange={(e) => setSelect(e.target.value)}
-                                helperText="Please select memo status"
-                            >
-                                <MenuItem value="PENDING">PENDING</MenuItem>
-                                <MenuItem value="URGENT">URGENT</MenuItem>
-                            </TextField>
-                        </div>
-
-                        <div
-                            className=""
-                            style={{
-                                paddingTop: "30px",
-                                paddingBottom: "30px",
-                            }}
-                        >
-                            <Button
-                                variant="contained"
-                                onClick={(e) => handleSubmit(e)}
-                            >
-                                Submit
-                            </Button>
-                        </div>
-                    </form>
-                </div>
-            </Paper>
-        </Container>
+                            {/* <div className={classes.submit}></div> */}
+                        </form>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
     );
 };
 

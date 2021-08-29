@@ -42,7 +42,7 @@ const Login = (props) => {
         const user = { username, password };
         console.log("coming from front ", user);
 
-        const config = { headers: { "Content-type": "application/json" } };
+        // const config = { headers: { "Content-type": "application/json" } };
         axios
             .post("http://localhost:8000/users/login", user /* , config */)
             .then((res) => {
@@ -52,9 +52,7 @@ const Login = (props) => {
                     localStorage.setItem("token", res.data.token);
                     // window.location.href = "/dashboard";
 
-                    history.push("/dashboard"); // import useHistory?
-
-                    // this.props.history.push
+                    history.push("/dashboard");
                 } else {
                     alert("Wrong Username/Password");
 

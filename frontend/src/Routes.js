@@ -7,34 +7,29 @@ import {
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import { UserContext } from "./UserContext";
 
 const Routes = () => {
     return (
         <div>
             <Router>
                 <Switch>
-                    <Route path="/" exact component={Login}>
-                        <Login />
-                    </Route>
+                    <UserContext.Provider value="testing context">
+                        <Route path="/" exact component={Login} />
+                        {/* <Login /> */}
 
-                    <Route path="/memo/signup" exact component={Signup}>
-                        <Signup />
-                    </Route>
+                        <Route path="/memo/signup" exact component={Signup}>
+                            <Signup />
+                        </Route>
 
-                    <Route path="/memo/login" exact component={Login}>
-                        <Login />
-                    </Route>
+                        <Route path="/memo/login" exact component={Login}>
+                            <Login />
+                        </Route>
 
-                    <Route path="/dashboard" exact component={Dashboard}>
-                        <Dashboard />
-                    </Route>
-
-                    {/*
-                    <Route path="/logout" exact component={Logout}>
-                        <Logout />
-                    </Route> */}
-                    {/* <Redirect to="/" />{" "} */}
-                    {/* to redirect any other route to home */}
+                        <Route path="/dashboard" exact component={Dashboard}>
+                            <Dashboard />
+                        </Route>
+                    </UserContext.Provider>
                 </Switch>
             </Router>
         </div>

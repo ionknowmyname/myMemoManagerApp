@@ -11,7 +11,7 @@ const { upload } = require("../uploadMulter");
 router.get("/memo", async (req, res) => {
     // console.log(req);
     try {
-        const memo = await Memo.find();
+        const memo = await Memo.find({ isResolved: false });
         if (!memo) throw Error("No items");
 
         res.status(200).json(memo);
@@ -19,7 +19,7 @@ router.get("/memo", async (req, res) => {
         res.status(400).json({ msg: e.message });
     }
 });
-/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 
 // const uploads = upload.single("file");
 
@@ -72,10 +72,10 @@ router.post("/memo", upload.single("file"), (req, res) => {
 //////////////////////// GET MEMO BY ID & UPDATE ////////////////////////
 router.post("/queryMemo", async (req, res) => {
     try {
-        const { _id } = req.body;
-        console.log("id: ", _id);
+        const { ID } = req.body;
+        console.log("id: ", ID);
         // console.log("req: ", req);
-        const memo = await Memo.findById({ _id: _id }); // req.params.id
+        const memo = await Memo.findById({ _id: ID });
         console.log("selected memo to pass front: ", memo);
         res.status(200).json(memo);
     } catch (e) {
@@ -83,43 +83,82 @@ router.post("/queryMemo", async (req, res) => {
     }
 });
 
-router.put("/memoUpdate", (req, res) => {
-    const { userId, title, from, to, dateofArrival } = req.body;
-    Memo.findOneAndUpdate(
-        userId,
-        { title, from, to, dateofArrival },
-        (err, memo) => {
-            if (err || !memo) {
-                return res.status(400).json({
-                    msg: "Memo does not exist",
-                });
-            } else {
-                res.status(200).json({
-                    msg: "Memo sucessfully updated",
-                });
+router.post("/memoUpdate", async (req, res) => {
+    // can also use put method
+    try {
+        const { ID, memoRemark, select } = req.body; // memoTo, memoFrom, memoTitle,
+
+        Memo.findOneAndUpdate(
+            { _id: ID },
+            { memoRemark, select }, // memoTo, memoFrom, memoTitle,
+            // so that it doesnt update
+            (err, memo) => {
+                if (!memo) {
+                    return res.status(400).json({
+                        msg: "Memo does not exist",
+                    });
+                } else {
+                    if (err) {
+                        return res.status(401).json({
+                            msg: err,
+                        });
+                    }
+
+                    res.status(200).json({
+                        msg: "Memo sucessfully updated",
+                        updatedMemo: memo,
+                    });
+                }
             }
-        }
-    );
+        );
+    } catch (e) {
+        res.status(400).json({ msg: e.message });
+    }
 });
 
-/* router.post("/memoUpdate", auth, (req, res) => {
-    const { userId, title, from, to, dateofArrival } = req.body;
-    Memo.findOneAndUpdate(
-        userId,
-        { title, from, to, dateofArrival },
-        (err, memo) => {
-            if (err || !memo) {
+////////////////////////////////////////////////////////////////////////
+
+////////////////////////////// RESOLVE MEMO //////////////////////////////
+router.put("/resolvedMemo", async (req, res) => {
+    try {
+        const { ID, isResolved } = req.body;
+
+        Memo.findByIdAndUpdate({ _id: ID }, { isResolved }, (err, memo) => {
+            if (!memo) {
                 return res.status(400).json({
                     msg: "Memo does not exist",
                 });
             } else {
+                if (err) {
+                    return res.status(401).json({
+                        msg: err,
+                    });
+                }
+
                 res.status(200).json({
                     msg: "Memo sucessfully updated",
+                    resolvedMemo: memo,
                 });
             }
-        }
-    );
-}); */
+        });
+    } catch (e) {
+        res.status(400).json({ msg: e.message });
+    }
+});
 ////////////////////////////////////////////////////////////////////////
+
+///////////////////// GET RESOLVED MEMOS /////////////////////
+router.get("/resolvedMemo", async (req, res) => {
+    // console.log(req);
+    try {
+        const memo = await Memo.find({ isResolved: true });
+        if (!memo) throw Error("No items");
+
+        res.status(200).json(memo);
+    } catch (e) {
+        res.status(400).json({ msg: e.message });
+    }
+});
+/////////////////////////////////////////////////////////
 
 module.exports = router;
