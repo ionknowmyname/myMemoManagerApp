@@ -7,6 +7,11 @@ const Memo = require("../models/Memo");
 const User = require("../models/User");
 const { upload } = require("../uploadMulter");
 
+const elastic = require("elasticsearch");
+const elasticClient = elastic.Client({
+    host: "localhost:9200",
+});
+
 ///////////////////// GET ALL MEMOS /////////////////////
 router.get("/memo", async (req, res) => {
     // console.log(req);
